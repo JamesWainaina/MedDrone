@@ -70,4 +70,4 @@ The project includes unit tests and can be expanded with integration tests using
 - For production deployment, configure a h2 database or other relational database.
 - Modify `application.properties` for database configuration as needed.
 
-This README.md provides a basic overview to get started with the Ajua Drone Delivery System. For detailed API usage and further customization, refer to the source code and documentation within the project.
+This README.md provides a basic overview to get started with the Drone Delivery System. For detailed API usage and further customization, refer to the source code and documentation within the project.
