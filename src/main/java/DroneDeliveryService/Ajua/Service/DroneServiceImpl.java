@@ -1,6 +1,5 @@
 package DroneDeliveryService.Ajua.Service;
 
-import DroneDeliveryService.Ajua.Contollers.DroneController;
 import DroneDeliveryService.Ajua.Dto.Drones.AvailableDronesDto;
 import DroneDeliveryService.Ajua.Dto.Drones.RegisterDroneDto;
 import DroneDeliveryService.Ajua.Enums.DroneModel;
@@ -12,8 +11,6 @@ import DroneDeliveryService.Ajua.Repository.DroneRepository;
 import DroneDeliveryService.Ajua.Repository.MedicationRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +26,6 @@ public class DroneServiceImpl  implements DroneService {
     private ModelMapper modelMapper;
     @Autowired
     private MedicationRepository medicationRepository;
-
-    private static Logger logger = LoggerFactory.getLogger(DroneController.class);
 
     @Override
     @Transactional
@@ -69,29 +64,30 @@ public class DroneServiceImpl  implements DroneService {
     @Override
     @Transactional
     public void loadMedication(UUID serialNumber, List<Long> medicationIds, Double totalWeight) {
-        // 1. Fetch the drone from the repository
+        // first fetch the drone from the repository
         Drone drone = droneRepository.findById(serialNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Drone not found with serial number: " + serialNumber));
+                .orElseThrow(() -> new IllegalArgumentException("Drone not found with serial number: "
+                        + serialNumber));
 
-        // 2. Check battery capacity
+        // Check battery level
         if (drone.getBatteryCapacity() < 25) {
             throw new IllegalStateException("Drone battery capacity is below 25%. Cannot load medications.");
         }
 
-        // 2. Validate weight limit for the drone model
+        // Validate weight limit for the drone model
         if (!isWeightLimitValidForModel(drone.getModel(), drone.getWeightLimit())) {
             throw new IllegalArgumentException("Total weight exceeds the weight limit for the drone model.");
         }
 
-        // 2. Fetch all medications by their IDs
+        // Fetch all medications by their IDs
         List<Medication> medications = medicationRepository.findAllById(medicationIds);
 
-        // 3. Associate medications with the drone
+        // load medications on the drone
         for (Medication medication : medications) {
             medication.setDrone(drone);
         }
 
-        // 4. Save the updated medications (with drone association)
+        //Save the updated medications (with drone association)
         medicationRepository.saveAll(medications);
 
         drone.setState(DroneState.LOADED);
@@ -100,8 +96,7 @@ public class DroneServiceImpl  implements DroneService {
 
     // public function for checking weight of drone according to the model
     public boolean isWeightLimitValidForModel(DroneModel model, double weightLimit) {
-        // Assuming that different models have different weight limits.
-        // These limits should be defined somewhere (e.g., an enum or a properties file).
+        // Assuming that different Drone models have different weight limits.
         switch (model) {
             case Lightweight:
                 return weightLimit <= 200;
