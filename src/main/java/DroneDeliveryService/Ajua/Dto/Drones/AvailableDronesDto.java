@@ -2,6 +2,7 @@ package DroneDeliveryService.Ajua.Dto.Drones;
 
 import lombok.Builder;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -62,4 +63,24 @@ public class AvailableDronesDto {
     public void setState(String state) {
         this.state = state;
     }
+
+
+    // overriding test case objects are being compared by their reference rather than their content
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AvailableDronesDto that = (AvailableDronesDto) o;
+        return Objects.equals(serialNumber, that.serialNumber) &&
+                Objects.equals(model, that.model) &&
+                Objects.equals(weightLimit, that.weightLimit) &&
+                Objects.equals(batteryCapacity, that.batteryCapacity) &&
+                Objects.equals(state, that.state);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serialNumber, model, weightLimit, batteryCapacity, state);
+    }
+
 }

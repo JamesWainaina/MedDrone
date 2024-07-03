@@ -4,6 +4,7 @@ import DroneDeliveryService.Ajua.Models.Drone;
 import DroneDeliveryService.Ajua.Models.DroneBatteryAudit;
 import DroneDeliveryService.Ajua.Repository.DroneBatteryAuditRepository;
 import DroneDeliveryService.Ajua.Repository.DroneRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class DroneAuditService {
         this.droneBatteryAuditRepository = droneBatteryAuditRepository;
 
     }
-
+    @Transactional
     public void auditBatteryLevels(){
         List<Drone> drones = droneRepository.findAll();
         for (Drone drone : drones){
