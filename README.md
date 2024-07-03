@@ -1,6 +1,5 @@
-# Ajua - Drone Delivery System
-
-Ajua is a Spring Boot application for managing a fleet of drones that deliver medications. The application provides RESTful APIs to register drones, load them with medications, check their battery levels, and more.
+# MedDrone - Drone Delivery System
+This is a Spring Boot application for managing a fleet of drones that deliver medications. The application provides RESTful APIs to register drones, load them with medications, check their battery levels, and more.
 
 ## Project Setup
 
@@ -8,14 +7,14 @@ Ajua is a Spring Boot application for managing a fleet of drones that deliver me
 
 - Java 11 or higher
 - Maven 3.6.3 or higher
-- MySQL Server
+- IntelliJ IDEA (or any preferred Java IDE/editor)
 
 ### Project Structure
 
 The project uses the following dependencies:
 - **Spring Boot Starter Web**: For building web applications.
 - **Spring Boot Starter Data JPA**: For data persistence with JPA and Hibernate.
-- **MySQL Driver**: For MySQL database connectivity.
+- **H2 Database**: In-memory database for development purposes.
 - **Spring Boot DevTools**: For development-time features.
 - **Lombok**: For reducing boilerplate code.
 - **Spring REST Docs**: For documenting RESTful APIs.
@@ -35,7 +34,7 @@ The project uses the following dependencies:
 
 - Lombok
 - Spring Data JPA
-- MySQL Driver
+- H2 Database
 - Spring Boot DevTools
 - Spring REST Docs
 
@@ -45,8 +44,30 @@ The project uses the following dependencies:
 
 #### Database Configuration
 
-Ensure you have MySQL installed and running. Create a database named `meddrone`:
+The project uses H2 as an in-memory database for development. No additional setup is required.
 
-```sql
-CREATE DATABASE meddrone;
+#### IDE Setup
 
+1. **Open the Project**: Import the project into IntelliJ IDEA.
+2. **Resolve Dependencies**: Dependencies will automatically be downloaded by Maven.
+
+### Running the Application
+
+To run the application locally:
+- Run the main application class `AjuaApplication` in IntelliJ IDEA.
+- The application will start on port 8080 by default.
+
+### API Documentation
+
+Once the application is running, you can access the API documentation using Swagger UI or other API documentation tools.
+
+### Testing
+
+The project includes unit tests and can be expanded with integration tests using tools like JUnit.
+
+### Additional Notes
+
+- For production deployment, configure a h2 database or other relational database.
+- Modify `application.properties` for database configuration as needed.
+
+This README.md provides a basic overview to get started with the Ajua Drone Delivery System. For detailed API usage and further customization, refer to the source code and documentation within the project.
