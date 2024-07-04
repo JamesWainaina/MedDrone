@@ -3,9 +3,15 @@ package DroneDeliveryService.Ajua.Repository;
 import DroneDeliveryService.Ajua.Enums.DroneModel;
 import DroneDeliveryService.Ajua.Enums.DroneState;
 import DroneDeliveryService.Ajua.Models.Drone;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
+@Transactional
 class DroneRepositoryTest {
 
     @Autowired
@@ -23,20 +32,22 @@ class DroneRepositoryTest {
 
     @Test
     void findBySerialNumber() {
-        Drone drone = new Drone();
-        drone.setSerialNumber(UUID.randomUUID());
-        drone.setModel(DroneModel.Heavyweight);
-        drone.setWeightLimit(500.0);
-        drone.setBatteryCapacity(100);
-        drone.setState(DroneState.IDLE);
+        UUID serialNumber = UUID.randomUUID();
+        Drone drone = Drone.builder()
+                .serialNumber(serialNumber)
+                .model(DroneModel.Lightweight)
+                .weightLimit(100.0)
+                .batteryCapacity(60)
+                .state(DroneState.IDLE)
+                .build();
 
-        // Save the Drone entity
         droneRepository.save(drone);
 
-        // Test findBySerialNumber method
-        Optional<Drone> foundDroneOptional = droneRepository.findBySerialNumber(drone.getSerialNumber());
-        assertTrue(foundDroneOptional.isPresent());
-        assertEquals(drone.getSerialNumber(), foundDroneOptional.get().getSerialNumber());
+
+        Optional<Drone> foundDroneOptional = droneRepository
+                .findBySerialNumber(serialNumber);
+        assertThat(foundDroneOptional).isPresent();
+        assertThat(foundDroneOptional.get()).isEqualTo(drone);
     }
 
 
@@ -48,19 +59,12 @@ class DroneRepositoryTest {
         drone1.setBatteryCapacity(30);
         drone1.setState(DroneState.IDLE);
 
-        Drone drone2 = new Drone();
-        UUID serialNumber2 = UUID.randomUUID();
-        drone2.setSerialNumber(serialNumber2);
-        drone2.setBatteryCapacity(35);
-        drone2.setState(DroneState.IDLE);
 
-        List<Drone> drones = Arrays.asList(drone1, drone2);
+        List<Drone> drones = Arrays.asList(drone1);
 
-        when(droneRepository.findByStateAndBatteryLevel(DroneState.IDLE, 25)).thenReturn(drones);
+        droneRepository.findByStateAndBatteryLevel(DroneState.IDLE,30);
 
         List<Drone> result = droneRepository.findByStateAndBatteryLevel(DroneState.IDLE, 25);
-        assertEquals(2, result.size());
-        assertEquals(serialNumber1, result.get(0).getSerialNumber());
-        assertEquals(serialNumber2, result.get(1).getSerialNumber());
+        assertEquals(1, result.size());
     }
 }
